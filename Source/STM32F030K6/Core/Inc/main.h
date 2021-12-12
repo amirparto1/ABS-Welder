@@ -57,6 +57,14 @@ void Error_Handler(void);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
+#define SSEG2_Data_Pin GPIO_PIN_8
+#define SSEG2_Data_GPIO_Port GPIOA
+#define SSEG2_CLK_Pin GPIO_PIN_9
+#define SSEG2_CLK_GPIO_Port GPIOA
+#define SSEG1_Data_Pin GPIO_PIN_10
+#define SSEG1_Data_GPIO_Port GPIOA
+#define SSEG1_CLK_Pin GPIO_PIN_11
+#define SSEG1_CLK_GPIO_Port GPIOA
 /* USER CODE BEGIN Private defines */
 
 /* USER CODE END Private defines */

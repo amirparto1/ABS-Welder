@@ -45,6 +45,10 @@
 
 /* USER CODE BEGIN PV */
 double ADCvalue, Resistance, Voltage , steinhart;
+TM1637_structure Sseg1 = {.CLK_GPIO = Sseg1_CLK_GPIO_Port,.CLK_Pin =Sseg1_CLK_Pin
+,.Data_GPIO = Sseg1_Data_GPIO_Port , .Data_Pin = Sseg1_Data_Pin};
+TM1637_structure Sseg2 = {.CLK_GPIO = Sseg2_CLK_GPIO_Port,.CLK_Pin =Sseg2_CLK_Pin
+,.Data_GPIO = Sseg2_Data_GPIO_Port , .Data_Pin = Sseg2_Data_Pin};
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -88,9 +92,10 @@ int main(void)
   MX_GPIO_Init();
   MX_ADC1_Init();
   /* USER CODE BEGIN 2 */
-	tm1637Init();
-
-	tm1637SetBrightness(8);
+	tm1637Init(Sseg1);
+	tm1637Init(Sseg2);
+	tm1637SetBrightness(Sseg1, 8);
+	tm1637SetBrightness(Sseg2, 8);
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -127,7 +132,9 @@ int main(void)
 
 	char str[5] = { 0 };
 	sprintf(str, "%.4d", (int)steinhart);
-	tm1637Display(str);
+	tm1637Display(Sseg1,str);
+	sprintf(str, "%f", Voltage);
+	tm1637Display(Sseg2,str);
 	HAL_Delay(100);
 
     /* USER CODE END WHILE */
