@@ -44,7 +44,7 @@
 /* Private variables ---------------------------------------------------------*/
 
 /* USER CODE BEGIN PV */
-double ADCvalue, Resistance, Voltage;
+double ADCvalue, Resistance, Voltage , steinhart;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -95,14 +95,17 @@ int main(void)
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
-	double SERIESRESISTOR = 10000;
 	double adc_temp = {0};
+#define SERIESRESISTOR 10000
+#define NOMINAL_RESISTANCE 100000
+#define NOMINAL_TEMPERATURE 25
+#define BCOEFFICIENT 3950
 	while(1)
 	{
 		for (int var = 0; var < 50; ++var)
 		{
 			HAL_ADC_Start(&hadc1);
-HAL_Delay(5);
+			HAL_Delay(5);
 			adc_temp = HAL_ADC_GetValue(&hadc1);
 			ADCvalue += adc_temp;
 		}
@@ -113,10 +116,17 @@ HAL_Delay(5);
 	Resistance = (4096 / ADCvalue) - 1;
 	Resistance = SERIESRESISTOR / Resistance;
 
+	steinhart = Resistance / NOMINAL_RESISTANCE; // (R/Ro)
+	steinhart = log(steinhart); // ln(R/Ro)
+	steinhart /= BCOEFFICIENT; // 1/B * ln(R/Ro)
+	steinhart += 1.0 / (NOMINAL_TEMPERATURE + 273.15); // + (1/To)
+	steinhart = 1.0 / steinhart; // Invert
+	steinhart -= 273.15; // convert to C
+
 	Voltage = (ADCvalue *3.3)/4096;
 
 	char str[5] = { 0 };
-	sprintf(str, "%.4d", (int)Resistance);
+	sprintf(str, "%.4d", (int)steinhart);
 	tm1637Display(str);
 	HAL_Delay(100);
 
