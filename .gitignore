@@ -50,3 +50,9 @@ modules.order
 Module.symvers
 Mkfile.old
 dkms.conf
+*.mk
+Source/STM32F407VG/Debug/STM32F407VG.bin
+Source/STM32F407VG/Debug/TM1637.bin
+Source/STM32F407VG/Debug/TM1637.list
+*.list
+Source/STM32F407VG/Debug/makefile

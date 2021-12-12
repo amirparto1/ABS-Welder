@@ -1,20 +1,20 @@
 /* USER CODE BEGIN Header */
 /**
-  ******************************************************************************
-  * @file           : main.c
-  * @brief          : Main program body
-  ******************************************************************************
-  * @attention
-  *
-  * Copyright (c) 2021 STMicroelectronics.
-  * All rights reserved.
-  *
-  * This software is licensed under terms that can be found in the LICENSE file
-  * in the root directory of this software component.
-  * If no LICENSE file comes with this software, it is provided AS-IS.
-  *
-  ******************************************************************************
-  */
+ ******************************************************************************
+ * @file           : main.c
+ * @brief          : Main program body
+ ******************************************************************************
+ * @attention
+ *
+ * Copyright (c) 2021 STMicroelectronics.
+ * All rights reserved.
+ *
+ * This software is licensed under terms that can be found in the LICENSE file
+ * in the root directory of this software component.
+ * If no LICENSE file comes with this software, it is provided AS-IS.
+ *
+ ******************************************************************************
+ */
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
@@ -44,7 +44,7 @@
 /* Private variables ---------------------------------------------------------*/
 
 /* USER CODE BEGIN PV */
-
+double ADCvalue, Resistance, Voltage;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -88,26 +88,42 @@ int main(void)
   MX_GPIO_Init();
   MX_ADC1_Init();
   /* USER CODE BEGIN 2 */
-  tm1637Init();
+	tm1637Init();
 
-  tm1637SetBrightness(6);
-  uint16_t i =0 ;
+	tm1637SetBrightness(8);
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
-  while (1)
-  {
-	  char str[5] = {0};
-	  sprintf(str , "%.3dC" ,i%1000 );
-	  HAL_Delay(50);
-	  tm1637Display(str);
-	  i++;
+	double SERIESRESISTOR = 10000;
+	double adc_temp = {0};
+	while(1)
+	{
+		for (int var = 0; var < 50; ++var)
+		{
+			HAL_ADC_Start(&hadc1);
+HAL_Delay(5);
+			adc_temp = HAL_ADC_GetValue(&hadc1);
+			ADCvalue += adc_temp;
+		}
+		ADCvalue /= 50;
+
+
+//convert value to resistance
+	Resistance = (4096 / ADCvalue) - 1;
+	Resistance = SERIESRESISTOR / Resistance;
+
+	Voltage = (ADCvalue *3.3)/4096;
+
+	char str[5] = { 0 };
+	sprintf(str, "%.4d", (int)Resistance);
+	tm1637Display(str);
+	HAL_Delay(100);
 
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-  }
+	}
   /* USER CODE END 3 */
 }
 
@@ -165,11 +181,11 @@ void SystemClock_Config(void)
 void Error_Handler(void)
 {
   /* USER CODE BEGIN Error_Handler_Debug */
-  /* User can add his own implementation to report the HAL error return state */
-  __disable_irq();
-  while (1)
-  {
-  }
+	/* User can add his own implementation to report the HAL error return state */
+	__disable_irq();
+	while(1)
+	{
+	}
   /* USER CODE END Error_Handler_Debug */
 }
 
