@@ -5,12 +5,10 @@
 // Configuration.
 #define SegmentNo 4
 
-
-
 void _tm1637Start(TM1637_structure TM1637);
 void _tm1637Stop(TM1637_structure TM1637);
 void _tm1637ReadResult(TM1637_structure TM1637);
-void _tm1637WriteByte(TM1637_structure TM1637,unsigned char b);
+void _tm1637WriteByte(TM1637_structure TM1637 , unsigned char b);
 void _tm1637DelayUsec(unsigned int i);
 void _tm1637ClkHigh(TM1637_structure TM1637);
 void _tm1637ClkLow(TM1637_structure TM1637);
@@ -25,9 +23,9 @@ void tm1637Init(TM1637_structure TM1637)
 	g.Mode = GPIO_MODE_OUTPUT_OD;// OD = open drain
 	g.Speed = GPIO_SPEED_FREQ_HIGH;
 	g.Pin = TM1637.CLK_Pin;
-	HAL_GPIO_Init(TM1637.CLK_GPIO, &g);
+	HAL_GPIO_Init(TM1637.CLK_GPIO , &g);
 	g.Pin = TM1637.Data_Pin;
-	HAL_GPIO_Init(TM1637.Data_GPIO, &g);
+	HAL_GPIO_Init(TM1637.Data_GPIO , &g);
 }
 
 uint8_t _tm1637Convert(char l)
@@ -146,7 +144,7 @@ uint8_t _tm1637Convert(char l)
 			return 0x00;
 	}
 }
-void tm1637Display(TM1637_structure TM1637,char c[])
+void tm1637Display(TM1637_structure TM1637 , char c[])
 {
 	uint8_t digitArr[SegmentNo];
 	int mc = 0;
@@ -157,20 +155,21 @@ void tm1637Display(TM1637_structure TM1637,char c[])
 			digitArr[jt - 1] |= 0x80;
 			mc++;
 		}
-		if(c[jt + mc]) digitArr[jt] = _tm1637Convert(c[jt + mc]);
+		if(c[jt + mc])
+			digitArr[jt] = _tm1637Convert(c[jt + mc]);
 		else digitArr[jt] = 0x00;
 	}
 
 	_tm1637Start(TM1637);
-	_tm1637WriteByte(TM1637,0x40);
+	_tm1637WriteByte(TM1637 , 0x40);
 	_tm1637ReadResult(TM1637);
 	_tm1637Stop(TM1637);
 	_tm1637Start(TM1637);
-	_tm1637WriteByte(TM1637,0xc0);
+	_tm1637WriteByte(TM1637 , 0xc0);
 	_tm1637ReadResult(TM1637);
 	for(int it = 0 ; it < SegmentNo ; it++)
 	{
-		_tm1637WriteByte(TM1637,digitArr[it]);
+		_tm1637WriteByte(TM1637 , digitArr[it]);
 		_tm1637ReadResult(TM1637);
 	}
 	_tm1637Stop(TM1637);
@@ -181,7 +180,7 @@ uint8_t tm1637ReadKey(TM1637_structure TM1637)
 	uint8_t retval = 0;
 
 	_tm1637Start(TM1637);
-	_tm1637WriteByte(TM1637,0x42);
+	_tm1637WriteByte(TM1637 , 0x42);
 	_tm1637ReadResult(TM1637);
 
 	_tm1637DioHigh(TM1637);
@@ -190,7 +189,7 @@ uint8_t tm1637ReadKey(TM1637_structure TM1637)
 	{
 		_tm1637ClkHigh(TM1637);
 		retval <<= 1;
-		if(HAL_GPIO_ReadPin(TM1637.Data_GPIO, TM1637.Data_Pin) == GPIO_PIN_SET)
+		if(HAL_GPIO_ReadPin(TM1637.Data_GPIO , TM1637.Data_Pin) == GPIO_PIN_SET)
 		{
 			retval |= 0x01;
 		}
@@ -207,10 +206,10 @@ uint8_t tm1637ReadKey(TM1637_structure TM1637)
 }
 
 // Valid brightness values: 0 - 8.
-void tm1637SetBrightness(TM1637_structure TM1637,char brightness)
+void tm1637SetBrightness(TM1637_structure TM1637 , char brightness)
 {
 	_tm1637Start(TM1637);
-	_tm1637WriteByte(TM1637,0x87 + brightness);
+	_tm1637WriteByte(TM1637 , 0x87 + brightness);
 	_tm1637ReadResult(TM1637);
 	_tm1637Stop(TM1637);
 }
@@ -277,20 +276,20 @@ void _tm1637DelayUsec(unsigned int i)
 
 void _tm1637ClkHigh(TM1637_structure TM1637)
 {
-	HAL_GPIO_WritePin(TM1637.CLK_GPIO, TM1637.CLK_Pin, GPIO_PIN_SET);
+	HAL_GPIO_WritePin(TM1637.CLK_GPIO , TM1637.CLK_Pin , GPIO_PIN_SET);
 }
 
 void _tm1637ClkLow(TM1637_structure TM1637)
 {
-	HAL_GPIO_WritePin(TM1637.CLK_GPIO, TM1637.CLK_Pin, GPIO_PIN_RESET);
+	HAL_GPIO_WritePin(TM1637.CLK_GPIO , TM1637.CLK_Pin , GPIO_PIN_RESET);
 }
 
 void _tm1637DioHigh(TM1637_structure TM1637)
 {
-	HAL_GPIO_WritePin(TM1637.Data_GPIO, TM1637.Data_Pin, GPIO_PIN_SET);
+	HAL_GPIO_WritePin(TM1637.Data_GPIO , TM1637.Data_Pin , GPIO_PIN_SET);
 }
 
 void _tm1637DioLow(TM1637_structure TM1637)
 {
-	HAL_GPIO_WritePin(TM1637.Data_GPIO, TM1637.Data_Pin, GPIO_PIN_RESET);
+	HAL_GPIO_WritePin(TM1637.Data_GPIO , TM1637.Data_Pin , GPIO_PIN_RESET);
 }

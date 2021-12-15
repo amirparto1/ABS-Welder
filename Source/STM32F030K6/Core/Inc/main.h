@@ -57,6 +57,8 @@ void Error_Handler(void);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
+#define Heater_Pin GPIO_PIN_2
+#define Heater_GPIO_Port GPIOA
 #define SSEG2_Data_Pin GPIO_PIN_8
 #define SSEG2_Data_GPIO_Port GPIOA
 #define SSEG2_CLK_Pin GPIO_PIN_9

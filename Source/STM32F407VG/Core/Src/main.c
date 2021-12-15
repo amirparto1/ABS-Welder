@@ -44,11 +44,11 @@
 /* Private variables ---------------------------------------------------------*/
 
 /* USER CODE BEGIN PV */
-double ADCvalue, Resistance, Voltage , steinhart;
-TM1637_structure Sseg1 = {.CLK_GPIO = Sseg1_CLK_GPIO_Port,.CLK_Pin =Sseg1_CLK_Pin
-,.Data_GPIO = Sseg1_Data_GPIO_Port , .Data_Pin = Sseg1_Data_Pin};
-TM1637_structure Sseg2 = {.CLK_GPIO = Sseg2_CLK_GPIO_Port,.CLK_Pin =Sseg2_CLK_Pin
-,.Data_GPIO = Sseg2_Data_GPIO_Port , .Data_Pin = Sseg2_Data_Pin};
+double ADCvalue, Resistance, Voltage, steinhart;
+TM1637_structure Sseg1 = { .CLK_GPIO = Sseg1_CLK_GPIO_Port , .CLK_Pin = Sseg1_CLK_Pin , .Data_GPIO = Sseg1_Data_GPIO_Port ,
+	.Data_Pin = Sseg1_Data_Pin };
+TM1637_structure Sseg2 = { .CLK_GPIO = Sseg2_CLK_GPIO_Port , .CLK_Pin = Sseg2_CLK_Pin , .Data_GPIO = Sseg2_Data_GPIO_Port ,
+	.Data_Pin = Sseg2_Data_Pin };
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -63,51 +63,51 @@ void SystemClock_Config(void);
 /* USER CODE END 0 */
 
 /**
-  * @brief  The application entry point.
-  * @retval int
-  */
+ * @brief  The application entry point.
+ * @retval int
+ */
 int main(void)
 {
-  /* USER CODE BEGIN 1 */
+	/* USER CODE BEGIN 1 */
 
-  /* USER CODE END 1 */
+	/* USER CODE END 1 */
 
-  /* MCU Configuration--------------------------------------------------------*/
+	/* MCU Configuration--------------------------------------------------------*/
 
-  /* Reset of all peripherals, Initializes the Flash interface and the Systick. */
-  HAL_Init();
+	/* Reset of all peripherals, Initializes the Flash interface and the Systick. */
+	HAL_Init();
 
-  /* USER CODE BEGIN Init */
+	/* USER CODE BEGIN Init */
 
-  /* USER CODE END Init */
+	/* USER CODE END Init */
 
-  /* Configure the system clock */
-  SystemClock_Config();
+	/* Configure the system clock */
+	SystemClock_Config();
 
-  /* USER CODE BEGIN SysInit */
+	/* USER CODE BEGIN SysInit */
 
-  /* USER CODE END SysInit */
+	/* USER CODE END SysInit */
 
-  /* Initialize all configured peripherals */
-  MX_GPIO_Init();
-  MX_ADC1_Init();
-  /* USER CODE BEGIN 2 */
+	/* Initialize all configured peripherals */
+	MX_GPIO_Init();
+	MX_ADC1_Init();
+	/* USER CODE BEGIN 2 */
 	tm1637Init(Sseg1);
 	tm1637Init(Sseg2);
-	tm1637SetBrightness(Sseg1, 8);
-	tm1637SetBrightness(Sseg2, 8);
-  /* USER CODE END 2 */
+	tm1637SetBrightness(Sseg1 , 8);
+	tm1637SetBrightness(Sseg2 , 8);
+	/* USER CODE END 2 */
 
-  /* Infinite loop */
-  /* USER CODE BEGIN WHILE */
-	double adc_temp = {0};
+	/* Infinite loop */
+	/* USER CODE BEGIN WHILE */
+	double adc_temp = { 0 };
 #define SERIESRESISTOR 10000
 #define NOMINAL_RESISTANCE 100000
 #define NOMINAL_TEMPERATURE 25
 #define BCOEFFICIENT 3950
 	while(1)
 	{
-		for (int var = 0; var < 50; ++var)
+		for(int var = 0 ; var < 50 ; ++var)
 		{
 			HAL_ADC_Start(&hadc1);
 			HAL_Delay(5);
@@ -116,75 +116,73 @@ int main(void)
 		}
 		ADCvalue /= 50;
 
-
 //convert value to resistance
-	Resistance = (4096 / ADCvalue) - 1;
-	Resistance = SERIESRESISTOR / Resistance;
+		Resistance = (4096 / ADCvalue) - 1;
+		Resistance = SERIESRESISTOR / Resistance;
 
-	steinhart = Resistance / NOMINAL_RESISTANCE; // (R/Ro)
-	steinhart = log(steinhart); // ln(R/Ro)
-	steinhart /= BCOEFFICIENT; // 1/B * ln(R/Ro)
-	steinhart += 1.0 / (NOMINAL_TEMPERATURE + 273.15); // + (1/To)
-	steinhart = 1.0 / steinhart; // Invert
-	steinhart -= 273.15; // convert to C
+		steinhart = Resistance / NOMINAL_RESISTANCE;// (R/Ro)
+		steinhart = log(steinhart);// ln(R/Ro)
+		steinhart /= BCOEFFICIENT;// 1/B * ln(R/Ro)
+		steinhart += 1.0 / (NOMINAL_TEMPERATURE + 273.15);// + (1/To)
+		steinhart = 1.0 / steinhart;// Invert
+		steinhart -= 273.15;// convert to C
 
-	Voltage = (ADCvalue *3.3)/4096;
+		Voltage = (ADCvalue * 3.3) / 4096;
 
-	char str[5] = { 0 };
-	sprintf(str, "%.4d", (int)steinhart);
-	tm1637Display(Sseg1,str);
-	sprintf(str, "%f", Voltage);
-	tm1637Display(Sseg2,str);
-	HAL_Delay(100);
+		char str[5] = { 0 };
+		sprintf(str , "%.4d" , (int) steinhart);
+		tm1637Display(Sseg1 , str);
+		sprintf(str , "%f" , Voltage);
+		tm1637Display(Sseg2 , str);
+		HAL_Delay(100);
 
-    /* USER CODE END WHILE */
+		/* USER CODE END WHILE */
 
-    /* USER CODE BEGIN 3 */
+		/* USER CODE BEGIN 3 */
 	}
-  /* USER CODE END 3 */
+	/* USER CODE END 3 */
 }
 
 /**
-  * @brief System Clock Configuration
-  * @retval None
-  */
+ * @brief System Clock Configuration
+ * @retval None
+ */
 void SystemClock_Config(void)
 {
-  RCC_OscInitTypeDef RCC_OscInitStruct = {0};
-  RCC_ClkInitTypeDef RCC_ClkInitStruct = {0};
+	RCC_OscInitTypeDef RCC_OscInitStruct = { 0 };
+	RCC_ClkInitTypeDef RCC_ClkInitStruct = { 0 };
 
-  /** Configure the main internal regulator output voltage
-  */
-  __HAL_RCC_PWR_CLK_ENABLE();
-  __HAL_PWR_VOLTAGESCALING_CONFIG(PWR_REGULATOR_VOLTAGE_SCALE1);
-  /** Initializes the RCC Oscillators according to the specified parameters
-  * in the RCC_OscInitTypeDef structure.
-  */
-  RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSE;
-  RCC_OscInitStruct.HSEState = RCC_HSE_ON;
-  RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
-  RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSE;
-  RCC_OscInitStruct.PLL.PLLM = 4;
-  RCC_OscInitStruct.PLL.PLLN = 168;
-  RCC_OscInitStruct.PLL.PLLP = RCC_PLLP_DIV2;
-  RCC_OscInitStruct.PLL.PLLQ = 4;
-  if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
-  {
-    Error_Handler();
-  }
-  /** Initializes the CPU, AHB and APB buses clocks
-  */
-  RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK|RCC_CLOCKTYPE_SYSCLK
-                              |RCC_CLOCKTYPE_PCLK1|RCC_CLOCKTYPE_PCLK2;
-  RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_PLLCLK;
-  RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;
-  RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV4;
-  RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV2;
+	/** Configure the main internal regulator output voltage
+	 */
+	__HAL_RCC_PWR_CLK_ENABLE();
+	__HAL_PWR_VOLTAGESCALING_CONFIG(PWR_REGULATOR_VOLTAGE_SCALE1);
+	/** Initializes the RCC Oscillators according to the specified parameters
+	 * in the RCC_OscInitTypeDef structure.
+	 */
+	RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSE;
+	RCC_OscInitStruct.HSEState = RCC_HSE_ON;
+	RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
+	RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSE;
+	RCC_OscInitStruct.PLL.PLLM = 4;
+	RCC_OscInitStruct.PLL.PLLN = 168;
+	RCC_OscInitStruct.PLL.PLLP = RCC_PLLP_DIV2;
+	RCC_OscInitStruct.PLL.PLLQ = 4;
+	if(HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
+	{
+		Error_Handler();
+	}
+	/** Initializes the CPU, AHB and APB buses clocks
+	 */
+	RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK | RCC_CLOCKTYPE_SYSCLK | RCC_CLOCKTYPE_PCLK1 | RCC_CLOCKTYPE_PCLK2;
+	RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_PLLCLK;
+	RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;
+	RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV4;
+	RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV2;
 
-  if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_5) != HAL_OK)
-  {
-    Error_Handler();
-  }
+	if(HAL_RCC_ClockConfig(&RCC_ClkInitStruct , FLASH_LATENCY_5) != HAL_OK)
+	{
+		Error_Handler();
+	}
 }
 
 /* USER CODE BEGIN 4 */
@@ -192,18 +190,18 @@ void SystemClock_Config(void)
 /* USER CODE END 4 */
 
 /**
-  * @brief  This function is executed in case of error occurrence.
-  * @retval None
-  */
+ * @brief  This function is executed in case of error occurrence.
+ * @retval None
+ */
 void Error_Handler(void)
 {
-  /* USER CODE BEGIN Error_Handler_Debug */
+	/* USER CODE BEGIN Error_Handler_Debug */
 	/* User can add his own implementation to report the HAL error return state */
 	__disable_irq();
 	while(1)
 	{
 	}
-  /* USER CODE END Error_Handler_Debug */
+	/* USER CODE END Error_Handler_Debug */
 }
 
 #ifdef  USE_FULL_ASSERT

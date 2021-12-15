@@ -7,7 +7,7 @@ typedef struct
 	uint16_t CLK_Pin;
 	GPIO_TypeDef *Data_GPIO;
 	uint16_t Data_Pin;
-}TM1637_structure;
+} TM1637_structure;
 void tm1637Init(TM1637_structure TM1637);
 void tm1637Display(TM1637_structure TM1637 , char c[]);
 void tm1637SetBrightness(TM1637_structure TM1637 , char brightness);
