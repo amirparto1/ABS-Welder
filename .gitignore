@@ -56,3 +56,6 @@ Source/STM32F407VG/Debug/TM1637.bin
 Source/STM32F407VG/Debug/TM1637.list
 *.list
 Source/STM32F407VG/Debug/makefile
+*.Zip
+*.LOG
+*.SchDocPreview

@@ -59,6 +59,8 @@ void Error_Handler(void);
 /* Private defines -----------------------------------------------------------*/
 #define Heater_Pin GPIO_PIN_2
 #define Heater_GPIO_Port GPIOA
+#define Buzzer_Pin GPIO_PIN_7
+#define Buzzer_GPIO_Port GPIOA
 #define SSEG2_Data_Pin GPIO_PIN_8
 #define SSEG2_Data_GPIO_Port GPIOA
 #define SSEG2_CLK_Pin GPIO_PIN_9
@@ -67,6 +69,10 @@ void Error_Handler(void);
 #define SSEG1_Data_GPIO_Port GPIOA
 #define SSEG1_CLK_Pin GPIO_PIN_11
 #define SSEG1_CLK_GPIO_Port GPIOA
+#define BTN_Start_Stop_Pin GPIO_PIN_15
+#define BTN_Start_Stop_GPIO_Port GPIOA
+#define FAN_Pin GPIO_PIN_4
+#define FAN_GPIO_Port GPIOB
 /* USER CODE BEGIN Private defines */
 
 /* USER CODE END Private defines */
