@@ -50,27 +50,24 @@ void MX_GPIO_Init(void)
   __HAL_RCC_GPIOB_CLK_ENABLE();
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOA, Heater_Pin|Buzzer_Pin|SSEG2_Data_Pin|SSEG2_CLK_Pin
-                          |SSEG1_Data_Pin|SSEG1_CLK_Pin|BTN_Start_Stop_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOB, SSEG2_Data_Pin|SSEG2_CLK_Pin|Heater_Pin|Buzzer_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(FAN_GPIO_Port, FAN_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOA, SSEG1_Data_Pin|SSEG1_CLK_Pin|FAN_Pin|BTN_Start_Stop_Pin, GPIO_PIN_RESET);
 
-  /*Configure GPIO pins : PAPin PAPin PAPin PAPin
-                           PAPin PAPin PAPin */
-  GPIO_InitStruct.Pin = Heater_Pin|Buzzer_Pin|SSEG2_Data_Pin|SSEG2_CLK_Pin
-                          |SSEG1_Data_Pin|SSEG1_CLK_Pin|BTN_Start_Stop_Pin;
+  /*Configure GPIO pins : PBPin PBPin PBPin PBPin */
+  GPIO_InitStruct.Pin = SSEG2_Data_Pin|SSEG2_CLK_Pin|Heater_Pin|Buzzer_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+  HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+
+  /*Configure GPIO pins : PAPin PAPin PAPin PAPin */
+  GPIO_InitStruct.Pin = SSEG1_Data_Pin|SSEG1_CLK_Pin|FAN_Pin|BTN_Start_Stop_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
-
-  /*Configure GPIO pin : PtPin */
-  GPIO_InitStruct.Pin = FAN_Pin;
-  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
-  GPIO_InitStruct.Pull = GPIO_NOPULL;
-  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-  HAL_GPIO_Init(FAN_GPIO_Port, &GPIO_InitStruct);
 
 }
 
