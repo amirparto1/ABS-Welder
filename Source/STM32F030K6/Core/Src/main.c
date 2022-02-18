@@ -19,12 +19,13 @@
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 #include "adc.h"
+#include "dma.h"
 #include "gpio.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "stm32_tm1637.h"
-#include "NTC.h"
+#include "../../Drivers/ABS-Welder-libs/ABS-Welder-lib.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -90,6 +91,7 @@ int main(void)
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
   MX_ADC_Init();
+  MX_DMA_Init();
   /* USER CODE BEGIN 2 */
   tm1637Init(top_7seg_struct);
   tm1637SetBrightness(top_7seg_struct, 8);

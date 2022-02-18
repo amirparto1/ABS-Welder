@@ -1,12 +1,12 @@
 /*
- * NTC.h
+ * ABS-Welder-lib.h
  *
  *  Created on: Feb 18, 2022
  *      Author: Amir
  */
 
-#ifndef NTC_NTC_H_
-#define NTC_NTC_H_
+#ifndef ABS_WELDER_LIBS_ABS_WELDER_LIB_H_
+#define ABS_WELDER_LIBS_ABS_WELDER_LIB_H_
 
 #include "stm32f0xx.h"
 
@@ -19,4 +19,4 @@
 
 float NTC_Read_Temperature(uint8_t average_count);
 
-#endif /* NTC_NTC_H_ */
+#endif /* ABS_WELDER_LIBS_ABS_WELDER_LIB_H_ */
