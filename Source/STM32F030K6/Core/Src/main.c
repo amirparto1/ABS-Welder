@@ -23,7 +23,8 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+#include "stm32_tm1637.h"
+#include "NTC.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -43,7 +44,10 @@
 /* Private variables ---------------------------------------------------------*/
 
 /* USER CODE BEGIN PV */
-
+TM1637_structure top_7seg_struct = {.CLK_GPIO = SSEG1_CLK_GPIO_Port , .CLK_Pin = SSEG1_CLK_Pin
+, .Data_GPIO = SSEG1_Data_GPIO_Port , .Data_Pin = SSEG1_Data_Pin};
+TM1637_structure bottom_7seg_struct = {.CLK_GPIO = SSEG2_CLK_GPIO_Port , .CLK_Pin = SSEG2_CLK_Pin
+	, .Data_GPIO = SSEG2_Data_GPIO_Port , .Data_Pin = SSEG2_Data_Pin};
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -87,7 +91,10 @@ int main(void)
   MX_GPIO_Init();
   MX_ADC_Init();
   /* USER CODE BEGIN 2 */
-
+  tm1637Init(top_7seg_struct);
+  tm1637SetBrightness(top_7seg_struct, 8);
+  tm1637Init(bottom_7seg_struct);
+  tm1637SetBrightness(bottom_7seg_struct, 8);
   /* USER CODE END 2 */
 
   /* Infinite loop */
